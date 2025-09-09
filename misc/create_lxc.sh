@@ -335,10 +335,14 @@ flock -w 60 9 || {
   exit 211
 }
 
+# Capture pct create output using temp file to avoid command substitution issues
+PCT_CREATE_TMPFILE=$(mktemp)
 set +e  # Temporarily disable exit on error
-PCT_CREATE_OUTPUT=$(pct create "$CTID" "${TEMPLATE_STORAGE}:vztmpl/${TEMPLATE}" "${PCT_OPTIONS[@]}" 2>&1)
+pct create "$CTID" "${TEMPLATE_STORAGE}:vztmpl/${TEMPLATE}" "${PCT_OPTIONS[@]}" >"$PCT_CREATE_TMPFILE" 2>&1
 PCT_CREATE_EXIT_CODE=$?
 set -e  # Re-enable exit on error
+PCT_CREATE_OUTPUT=$(cat "$PCT_CREATE_TMPFILE")
+rm -f "$PCT_CREATE_TMPFILE"
 
 if [ $PCT_CREATE_EXIT_CODE -ne 0 ]; then
   msg_error "Container creation failed (exit code: $PCT_CREATE_EXIT_CODE)"
@@ -403,10 +407,13 @@ if [ $PCT_CREATE_EXIT_CODE -ne 0 ]; then
   msg_ok "Re-downloaded LXC Template"
 
   # Retry container creation with detailed error reporting
+  PCT_RETRY_TMPFILE=$(mktemp)
   set +e  # Temporarily disable exit on error
-  PCT_RETRY_OUTPUT=$(pct create "$CTID" "${TEMPLATE_STORAGE}:vztmpl/${TEMPLATE}" "${PCT_OPTIONS[@]}" 2>&1)
+  pct create "$CTID" "${TEMPLATE_STORAGE}:vztmpl/${TEMPLATE}" "${PCT_OPTIONS[@]}" >"$PCT_RETRY_TMPFILE" 2>&1
   PCT_RETRY_EXIT_CODE=$?
   set -e  # Re-enable exit on error
+  PCT_RETRY_OUTPUT=$(cat "$PCT_RETRY_TMPFILE")
+  rm -f "$PCT_RETRY_TMPFILE"
 
   if [ $PCT_RETRY_EXIT_CODE -ne 0 ]; then
     msg_error "Container creation failed again after template re-download (exit code: $PCT_RETRY_EXIT_CODE)"
