@@ -335,39 +335,8 @@ flock -w 60 9 || {
   exit 211
 }
 
-PCT_CREATE_OUTPUT=$(pct create "$CTID" "${TEMPLATE_STORAGE}:vztmpl/${TEMPLATE}" "${PCT_OPTIONS[@]}" 2>&1)
-PCT_CREATE_EXIT_CODE=$?
-
-if [ $PCT_CREATE_EXIT_CODE -ne 0 ]; then
-  msg_error "Container creation failed (exit code: $PCT_CREATE_EXIT_CODE)"
-  echo -e "${RD}Proxmox Error Output:${CL}"
-  echo -e "${YW}$PCT_CREATE_OUTPUT${CL}"
-  
-  # Additional diagnostic information
-  echo -e "\n${INFO}${YW}Container Creation Diagnostic Information:${CL}"
-  echo -e "${TAB}Container ID: ${CTID}"
-  echo -e "${TAB}Template: ${TEMPLATE_STORAGE}:vztmpl/${TEMPLATE}"
-  echo -e "${TAB}Template Path: ${TEMPLATE_PATH}"
-  echo -e "${TAB}Template Size: $(stat -c%s "$TEMPLATE_PATH" 2>/dev/null || echo "N/A") bytes"
-  echo -e "${TAB}Storage: ${CONTAINER_STORAGE}"
-  echo -e "${TAB}Storage Free: $(pvesm status | awk -v s="$CONTAINER_STORAGE" '$1 == s { print $6 }') KB"
-  echo -e "${TAB}Required Disk: ${PCT_DISK_SIZE:-8} GB ($(( ${PCT_DISK_SIZE:-8} * 1024 * 1024 )) KB)"
-  
-  # Check for common issues
-  if echo "$PCT_CREATE_OUTPUT" | grep -qi "storage"; then
-    echo -e "${TAB}${RD}⚠️  Storage-related error detected${CL}"
-  fi
-  if echo "$PCT_CREATE_OUTPUT" | grep -qi "network\|bridge"; then
-    echo -e "${TAB}${RD}⚠️  Network/Bridge-related error detected${CL}"
-  fi
-  if echo "$PCT_CREATE_OUTPUT" | grep -qi "permission\|denied"; then
-    echo -e "${TAB}${RD}⚠️  Permission error detected${CL}"
-  fi
-  if echo "$PCT_CREATE_OUTPUT" | grep -qi "mtu"; then
-    echo -e "${TAB}${RD}⚠️  MTU-related error detected${CL}"
-  fi
-  
-  msg_error "Checking if template is corrupted or incomplete."
+if ! pct create "$CTID" "${TEMPLATE_STORAGE}:vztmpl/${TEMPLATE}" "${PCT_OPTIONS[@]}" &>/dev/null; then
+  msg_error "Container creation failed. Checking if template is corrupted or incomplete."
 
   if [[ ! -s "$TEMPLATE_PATH" || "$(stat -c%s "$TEMPLATE_PATH")" -lt 1000000 ]]; then
     msg_error "Template file too small or missing – re-downloading."
@@ -396,17 +365,6 @@ if [ $PCT_CREATE_EXIT_CODE -ne 0 ]; then
 
   sleep 1 # I/O-Sync-Delay
   msg_ok "Re-downloaded LXC Template"
-  
-  # Retry container creation with detailed error reporting
-  PCT_RETRY_OUTPUT=$(pct create "$CTID" "${TEMPLATE_STORAGE}:vztmpl/${TEMPLATE}" "${PCT_OPTIONS[@]}" 2>&1)
-  PCT_RETRY_EXIT_CODE=$?
-  
-  if [ $PCT_RETRY_EXIT_CODE -ne 0 ]; then
-    msg_error "Container creation failed again after template re-download (exit code: $PCT_RETRY_EXIT_CODE)"
-    echo -e "${RD}Proxmox Error Output:${CL}"
-    echo -e "${YW}$PCT_RETRY_OUTPUT${CL}"
-    exit 209
-  fi
 fi
 
 if ! pct list | awk '{print $1}' | grep -qx "$CTID"; then
