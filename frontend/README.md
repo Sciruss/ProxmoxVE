@@ -259,7 +259,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 🙏 Acknowledgments
 
 - **[tteck](https://github.com/tteck)** - Original creator of the Proxmox VE Helper-Scripts
-- **[Community-Scripts Organization](https://github.com/community-scripts)** - Maintaining and expanding the project
+- **[Community-Scripts Organization](https://github.com/Sciruss)** - Maintaining and expanding the project
 - **[Proxmox Community](https://forum.proxmox.com/)** - For continuous feedback and support
 - **All Contributors** - Thank you for your valuable contributions!
 
@@ -272,7 +272,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🔗 Links
 
-- **🌐 Live Website**: [https://community-scripts.github.io/ProxmoxVE/](https://community-scripts.github.io/ProxmoxVE/)
+- **🌐 Live Website**: [https://Sciruss.github.io/ProxmoxVE/](https://Sciruss.github.io/ProxmoxVE/)
 - **💬 Discord Server**: [https://discord.gg/2wvnMDgdnU](https://discord.gg/2wvnMDgdnU)
 - **📝 Change Log**: [https://github.com/Sciruss/ProxmoxVE/blob/main/CHANGELOG.md](https://github.com/Sciruss/ProxmoxVE/blob/main/CHANGELOG.md)
 

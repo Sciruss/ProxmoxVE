@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2025 Sciruss ORG
 # Author: thost96 (thost96) | Co-Author: michelroegl-brunner
 # License: MIT | https://github.com/Sciruss/ProxmoxVE/raw/main/LICENSE
 

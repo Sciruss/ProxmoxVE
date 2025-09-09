@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/Sciruss/ProxmoxVE/main/misc/build.func)
-# Copyright (c) community-scripts ORG
+# Copyright (c) Sciruss ORG
 # Author: Michelle Zitzerman (Sinofage)
 # License: MIT | https://github.com/Sciruss/ProxmoxVE/raw/main/LICENSE
 # Source: https://beszel.dev/

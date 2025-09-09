@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/Sciruss/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 community-scripts
+# Copyright (c) 2021-2025 Sciruss
 # Author: CrazyWolf13
 # License: MIT | https://github.com/Sciruss/ProxmoxVE/raw/main/LICENSE
 # Source: https://gitlab.com/crafty-controller/crafty-4

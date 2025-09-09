@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/Sciruss/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2025 Sciruss ORG
 # Author: Dave-code-creater (Tan Dat, Ta)
 # License: MIT | https://github.com/Sciruss/ProxmoxVE/raw/main/LICENSE
 # Source: https://jupyter.org/

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2024 community-scripts ORG
+# Copyright (c) 2024 Sciruss ORG
 # Author: Omar Minaya
 # License: MIT | https://github.com/Sciruss/ProxmoxVE/raw/main/LICENSE
 # Source: https://wazuh.com/

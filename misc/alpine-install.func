@@ -1,4 +1,4 @@
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2025 Sciruss ORG
 # Author: tteck (tteckster)
 # Co-Author: MickLesk
 # License: MIT | https://github.com/Sciruss/ProxmoxVE/raw/main/LICENSE
@@ -82,7 +82,7 @@ network_check() {
 update_os() {
   msg_info "Updating Container OS"
   $STD apk -U upgrade
-  source <(curl -fsSL https://git.community-scripts.org/Sciruss/ProxmoxVED/raw/branch/main/misc/tools.func)
+  source <(curl -fsSL https://git.Sciruss.org/Sciruss/ProxmoxVED/raw/branch/main/misc/tools.func)
   msg_ok "Updated Container OS"
 }
 
@@ -102,7 +102,7 @@ motd_ssh() {
   PROFILE_FILE="/etc/profile.d/00_lxc-details.sh"
   echo "echo -e \"\"" >"$PROFILE_FILE"
   echo -e "echo -e \"${BOLD}${APPLICATION} LXC Container${CL}"\" >>"$PROFILE_FILE"
-  echo -e "echo -e \"${TAB}${GATEWAY}${YW} Provided by: ${GN}community-scripts ORG ${YW}| GitHub: ${GN}https://github.com/Sciruss/ProxmoxVE${CL}\"" >>"$PROFILE_FILE"
+  echo -e "echo -e \"${TAB}${GATEWAY}${YW} Provided by: ${GN}Sciruss ORG ${YW}| GitHub: ${GN}https://github.com/Sciruss/ProxmoxVE${CL}\"" >>"$PROFILE_FILE"
   echo "echo \"\"" >>"$PROFILE_FILE"
   echo -e "echo -e \"${TAB}${OS}${YW} OS: ${GN}${OS_NAME} - Version: ${OS_VERSION}${CL}\"" >>"$PROFILE_FILE"
   echo -e "echo -e \"${TAB}${HOSTNAME}${YW} Hostname: ${GN}\$(hostname)${CL}\"" >>"$PROFILE_FILE"

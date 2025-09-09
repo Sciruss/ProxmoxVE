@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2025 Sciruss ORG
 # Author: Slaviša Arežina (tremor021) | Co-Author: Stavros (steveiliop56)
 # License: MIT | https://github.com/Sciruss/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/steveiliop56/tinyauth

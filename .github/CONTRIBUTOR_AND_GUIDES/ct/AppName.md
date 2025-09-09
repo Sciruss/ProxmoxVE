@@ -56,7 +56,7 @@ source <(curl -fsSL https://raw.githubusercontent.com/Sciruss/ProxmoxVE/main/mis
 ```
 
 > [!CAUTION]
-> Before opening a Pull Request, change the URLs to point to the community-scripts repo.
+> Before opening a Pull Request, change the URLs to point to the Sciruss repo.
 
 ### 1.3 **Metadata**
 
@@ -65,7 +65,7 @@ source <(curl -fsSL https://raw.githubusercontent.com/Sciruss/ProxmoxVE/main/mis
 Example:
 
 ```bash
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2025 Sciruss ORG
 # Author: [YourUserName]
 # License: MIT | https://github.com/Sciruss/ProxmoxVE/raw/main/LICENSE
 # Source: [SOURCE_URL]

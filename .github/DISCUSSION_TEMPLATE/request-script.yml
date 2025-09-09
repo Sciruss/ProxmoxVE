@@ -26,7 +26,7 @@ body:
   attributes:
     label: Due Diligence
     options:
-      - label: "I have searched existing [scripts](https://community-scripts.github.io/Proxmox/scripts) and found no duplicates."
+      - label: "I have searched existing [scripts](https://Sciruss.github.io/Proxmox/scripts) and found no duplicates."
         required: true
       - label: "I have searched existing [discussions](https://github.com/Sciruss/ProxmoxVE/discussions?discussions_q=) and found no duplicate requests."
         required: true

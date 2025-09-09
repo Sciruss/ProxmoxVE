@@ -3288,7 +3288,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - Website: Lowercase Zitadel-Slug [@MickLesk](https://github.com/MickLesk) ([#3222](https://github.com/Sciruss/ProxmoxVE/pull/3222))
     - VictoriaMetrics: Fix Wrong Slug [@MickLesk](https://github.com/MickLesk) ([#3225](https://github.com/Sciruss/ProxmoxVE/pull/3225))
     - Update Pimox Logo [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#3233](https://github.com/Sciruss/ProxmoxVE/pull/3233))
-    - [AUTOMATIC PR]Update versions.json [@community-scripts-pr-app[bot]](https://github.com/community-scripts-pr-app[bot]) ([#3201](https://github.com/Sciruss/ProxmoxVE/pull/3201))
+    - [AUTOMATIC PR]Update versions.json [@Sciruss-pr-app[bot]](https://github.com/Sciruss-pr-app[bot]) ([#3201](https://github.com/Sciruss/ProxmoxVE/pull/3201))
     - GoMFT: Update Logo [@MickLesk](https://github.com/MickLesk) ([#3188](https://github.com/Sciruss/ProxmoxVE/pull/3188))
 
 ## 2025-03-17
@@ -3523,7 +3523,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
   - #### 🐞 Bug Fixes
 
     - Homarr: Optional Reboot after update [@CrazyWolf13](https://github.com/CrazyWolf13) ([#2876](https://github.com/Sciruss/ProxmoxVE/pull/2876))
-    - Fix Tag "community-scripts" for ArchLinux / OPNSense [@MickLesk](https://github.com/MickLesk) ([#2875](https://github.com/Sciruss/ProxmoxVE/pull/2875))
+    - Fix Tag "Sciruss" for ArchLinux / OPNSense [@MickLesk](https://github.com/MickLesk) ([#2875](https://github.com/Sciruss/ProxmoxVE/pull/2875))
 
   - #### ✨ New Features
 

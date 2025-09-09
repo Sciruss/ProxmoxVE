@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2025 Sciruss ORG
 # Author: MickLesk
 # Adapted from onethree7 (https://github.com/onethree7/proxmox-lxc-privilege-converter)
 # License: MIT | https://github.com/Sciruss/ProxmoxVE/raw/main/LICENSE
@@ -10,7 +10,7 @@ if ! command -v curl >/dev/null 2>&1; then
   apt-get update >/dev/null 2>&1
   apt-get install -y curl >/dev/null 2>&1
 fi
-source <(curl -fsSL https://git.community-scripts.org/Sciruss/ProxmoxVED/raw/branch/main/misc/core.func)
+source <(curl -fsSL https://git.Sciruss.org/Sciruss/ProxmoxVED/raw/branch/main/misc/core.func)
 load_functions
 
 set -euo pipefail

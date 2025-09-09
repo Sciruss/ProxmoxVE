@@ -102,16 +102,16 @@ jobs:
                   continue
                 fi
             fi
-            git remote add community-scripts https://github.com/Sciruss/ProxmoxVE.git
-            git fetch community-scripts
+            git remote add Sciruss https://github.com/Sciruss/ProxmoxVE.git
+            git fetch Sciruss
             rm -f .github/workflows/scripts/app-test/pr-build.func || true
             rm -f .github/workflows/scripts/app-test/pr-install.func || true
             rm -f .github/workflows/scripts/app-test/pr-alpine-install.func || true
             rm -f .github/workflows/scripts/app-test/pr-create-lxc.sh || true
-            git checkout community-scripts/main -- .github/workflows/scripts/app-test/pr-build.func
-            git checkout community-scripts/main -- .github/workflows/scripts/app-test/pr-install.func
-            git checkout community-scripts/main -- .github/workflows/scripts/app-test/pr-alpine-install.func
-            git checkout community-scripts/main -- .github/workflows/scripts/app-test/pr-create-lxc.sh
+            git checkout Sciruss/main -- .github/workflows/scripts/app-test/pr-build.func
+            git checkout Sciruss/main -- .github/workflows/scripts/app-test/pr-install.func
+            git checkout Sciruss/main -- .github/workflows/scripts/app-test/pr-alpine-install.func
+            git checkout Sciruss/main -- .github/workflows/scripts/app-test/pr-create-lxc.sh
             chmod +x $RUNNING_FILE         
             chmod +x .github/workflows/scripts/app-test/pr-create-lxc.sh
             chmod +x .github/workflows/scripts/app-test/pr-install.func

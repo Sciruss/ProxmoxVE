@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 source <(curl -s https://raw.githubusercontent.com/Sciruss/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2025 Sciruss ORG
 # Author: David Bennett (dbinit)
 # License: MIT | https://github.com/Sciruss/ProxmoxVE/raw/main/LICENSE
 # Source: https://www.resilio.com/sync

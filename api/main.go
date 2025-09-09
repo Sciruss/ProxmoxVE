@@ -1,4 +1,4 @@
-// Copyright (c) 2021-2025 community-scripts ORG
+// Copyright (c) 2021-2025 Sciruss ORG
 // Author: Michel Roegl-Brunner (michelroegl-brunner)
 // License: MIT | https://github.com/Sciruss/ProxmoxVE/raw/main/LICENSE
 
