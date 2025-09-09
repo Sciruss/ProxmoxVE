@@ -337,10 +337,14 @@ flock -w 60 9 || {
 
 # Capture pct create output using temp file to avoid command substitution issues
 PCT_CREATE_TMPFILE=$(mktemp)
-set +e  # Temporarily disable exit on error
+# Temporarily disable error handling
+set +eE
+trap - ERR
 pct create "$CTID" "${TEMPLATE_STORAGE}:vztmpl/${TEMPLATE}" "${PCT_OPTIONS[@]}" >"$PCT_CREATE_TMPFILE" 2>&1
 PCT_CREATE_EXIT_CODE=$?
-set -e  # Re-enable exit on error
+# Re-enable error handling
+set -eE
+trap 'error_handler $LINENO "$BASH_COMMAND"' ERR
 PCT_CREATE_OUTPUT=$(cat "$PCT_CREATE_TMPFILE")
 rm -f "$PCT_CREATE_TMPFILE"
 
@@ -408,10 +412,14 @@ if [ $PCT_CREATE_EXIT_CODE -ne 0 ]; then
 
   # Retry container creation with detailed error reporting
   PCT_RETRY_TMPFILE=$(mktemp)
-  set +e  # Temporarily disable exit on error
+  # Temporarily disable error handling
+  set +eE
+  trap - ERR
   pct create "$CTID" "${TEMPLATE_STORAGE}:vztmpl/${TEMPLATE}" "${PCT_OPTIONS[@]}" >"$PCT_RETRY_TMPFILE" 2>&1
   PCT_RETRY_EXIT_CODE=$?
-  set -e  # Re-enable exit on error
+  # Re-enable error handling
+  set -eE
+  trap 'error_handler $LINENO "$BASH_COMMAND"' ERR
   PCT_RETRY_OUTPUT=$(cat "$PCT_RETRY_TMPFILE")
   rm -f "$PCT_RETRY_TMPFILE"
 
