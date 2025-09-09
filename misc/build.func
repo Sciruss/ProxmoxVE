@@ -30,6 +30,46 @@ catch_errors() {
   trap 'error_handler $LINENO "$BASH_COMMAND"' ERR
 }
 
+# This function provides troubleshooting suggestions based on error context
+provide_troubleshooting_suggestions() {
+  local exit_code="$1"
+  local command="$2"
+  local line_number="$3"
+  
+  echo -e "\n${INFO}${YW}Troubleshooting Suggestions:${CL}"
+  
+  # Container creation specific errors
+  if [[ "$command" == *"pct create"* ]] || [[ "$exit_code" == "209" ]]; then
+    echo -e "${TAB}• Check if the container ID is already in use: ${GN}pct list${CL}"
+    echo -e "${TAB}• Verify storage has enough space: ${GN}pvesm status${CL}"
+    echo -e "${TAB}• Check bridge configuration: ${GN}ip addr show${CL}"
+    echo -e "${TAB}• Verify MTU settings match your network infrastructure"
+    echo -e "${TAB}• Try using a different container ID"
+    echo -e "${TAB}• Check DNS configuration (avoid 127.0.0.1 for containers)"
+  fi
+  
+  # Network related errors
+  if [[ "$command" == *"bridge"* ]] || [[ "$exit_code" == "101" ]]; then
+    echo -e "${TAB}• Verify network bridge exists: ${GN}brctl show${CL}"
+    echo -e "${TAB}• Check firewall rules: ${GN}iptables -L${CL}"
+    echo -e "${TAB}• Ensure bridge has correct IP configuration"
+  fi
+  
+  # Storage related errors
+  if [[ "$command" == *"storage"* ]] || [[ "$exit_code" == "214" ]]; then
+    echo -e "${TAB}• Check storage status: ${GN}pvesm status${CL}"
+    echo -e "${TAB}• Verify storage permissions and quotas"
+    echo -e "${TAB}• Check available space on the selected storage"
+  fi
+  
+  # Template related errors  
+  if [[ "$command" == *"template"* ]] || [[ "$exit_code" == "208" ]]; then
+    echo -e "${TAB}• Manually download template: ${GN}pveam download <storage> <template>${CL}"
+    echo -e "${TAB}• Check internet connectivity from Proxmox host"
+    echo -e "${TAB}• Verify template repository is accessible"
+  fi
+}
+
 # This function is called when an error occurs. It receives the exit code, line number, and command that caused the error, and displays an error message.
 error_handler() {
   source /dev/stdin <<<$(curl -fsSL https://raw.githubusercontent.com/Sciruss/ProxmoxVE/main/misc/api.func)
@@ -39,7 +79,11 @@ error_handler() {
   local command="$2"
   local error_message="${RD}[ERROR]${CL} in line ${RD}$line_number${CL}: exit code ${RD}$exit_code${CL}: while executing command ${YW}$command${CL}"
   post_update_to_api "failed" "${command}"
-  echo -e "\n$error_message\n"
+  echo -e "\n$error_message"
+  
+  # Provide context-aware troubleshooting suggestions
+  provide_troubleshooting_suggestions "$exit_code" "$command" "$line_number"
+  echo ""
 }
 
 # Check if the shell is using bash
@@ -1149,7 +1193,16 @@ build_container() {
     $PW
   "
   # This executes create_lxc.sh and creates the container and .conf file
-  bash -c "$(curl -fsSL https://raw.githubusercontent.com/Sciruss/ProxmoxVE/main/misc/create_lxc.sh)" $?
+  msg_info "Executing container creation with detailed error reporting"
+  CREATE_LXC_OUTPUT=$(bash -c "$(curl -fsSL https://raw.githubusercontent.com/Sciruss/ProxmoxVE/main/misc/create_lxc.sh)" 2>&1)
+  CREATE_LXC_EXIT_CODE=$?
+  
+  if [ $CREATE_LXC_EXIT_CODE -ne 0 ]; then
+    msg_error "Container creation script failed (exit code: $CREATE_LXC_EXIT_CODE)"
+    echo -e "${RD}Container Creation Error Details:${CL}"
+    echo -e "${YW}$CREATE_LXC_OUTPUT${CL}"
+    exit $CREATE_LXC_EXIT_CODE
+  fi
 
   LXC_CONFIG="/etc/pve/lxc/${CTID}.conf"
 
@@ -1397,21 +1450,75 @@ api_exit_script() {
   #100 exit codes indicate error in install.func
 
   if [ $exit_code -ne 0 ]; then
+    echo -e "\n${RD}[FINAL ERROR SUMMARY]${CL}"
+    echo -e "${TAB}Exit Code: $exit_code"
+    echo -e "${TAB}Script: create_lxc.sh / build.func"
+    
     case $exit_code in
-    100) post_update_to_api "failed" "100: Unexpected error in create_lxc.sh" ;;
-    101) post_update_to_api "failed" "101: No network connection detected in create_lxc.sh" ;;
-    200) post_update_to_api "failed" "200: LXC creation failed in create_lxc.sh" ;;
-    201) post_update_to_api "failed" "201: Invalid Storage class in create_lxc.sh" ;;
-    202) post_update_to_api "failed" "202: User aborted menu in create_lxc.sh" ;;
-    203) post_update_to_api "failed" "203: CTID not set in create_lxc.sh" ;;
-    204) post_update_to_api "failed" "204: PCT_OSTYPE not set in create_lxc.sh" ;;
-    205) post_update_to_api "failed" "205: CTID cannot be less than 100 in create_lxc.sh" ;;
-    206) post_update_to_api "failed" "206: CTID already in use in create_lxc.sh" ;;
-    207) post_update_to_api "failed" "207: Template not found in create_lxc.sh" ;;
-    208) post_update_to_api "failed" "208: Error downloading template in create_lxc.sh" ;;
-    209) post_update_to_api "failed" "209: Container creation failed, but template is intact in create_lxc.sh" ;;
-    *) post_update_to_api "failed" "Unknown error, exit code: $exit_code in create_lxc.sh" ;;
+    100) 
+      echo -e "${TAB}Error: Unexpected error in create_lxc.sh"
+      post_update_to_api "failed" "100: Unexpected error in create_lxc.sh" 
+      ;;
+    101) 
+      echo -e "${TAB}Error: No network connection detected in create_lxc.sh"
+      echo -e "${TAB}Suggestion: Check network configuration and connectivity"
+      post_update_to_api "failed" "101: No network connection detected in create_lxc.sh" 
+      ;;
+    200) 
+      echo -e "${TAB}Error: LXC creation failed in create_lxc.sh"
+      echo -e "${TAB}Suggestion: Check container settings and Proxmox logs"
+      post_update_to_api "failed" "200: LXC creation failed in create_lxc.sh" 
+      ;;
+    201) 
+      echo -e "${TAB}Error: Invalid Storage class in create_lxc.sh"
+      echo -e "${TAB}Suggestion: Verify storage configuration with 'pvesm status'"
+      post_update_to_api "failed" "201: Invalid Storage class in create_lxc.sh" 
+      ;;
+    202) 
+      echo -e "${TAB}Error: User aborted menu in create_lxc.sh"
+      post_update_to_api "failed" "202: User aborted menu in create_lxc.sh" 
+      ;;
+    203) 
+      echo -e "${TAB}Error: CTID not set in create_lxc.sh"
+      echo -e "${TAB}Suggestion: Specify a valid container ID (>= 100)"
+      post_update_to_api "failed" "203: CTID not set in create_lxc.sh" 
+      ;;
+    204) 
+      echo -e "${TAB}Error: PCT_OSTYPE not set in create_lxc.sh"
+      echo -e "${TAB}Suggestion: Verify OS type configuration"
+      post_update_to_api "failed" "204: PCT_OSTYPE not set in create_lxc.sh" 
+      ;;
+    205) 
+      echo -e "${TAB}Error: CTID cannot be less than 100 in create_lxc.sh"
+      echo -e "${TAB}Suggestion: Use container ID >= 100"
+      post_update_to_api "failed" "205: CTID cannot be less than 100 in create_lxc.sh" 
+      ;;
+    206) 
+      echo -e "${TAB}Error: CTID already in use in create_lxc.sh"
+      echo -e "${TAB}Suggestion: Choose a different container ID or remove existing container"
+      post_update_to_api "failed" "206: CTID already in use in create_lxc.sh" 
+      ;;
+    207) 
+      echo -e "${TAB}Error: Template not found in create_lxc.sh"
+      echo -e "${TAB}Suggestion: Check template availability with 'pveam available'"
+      post_update_to_api "failed" "207: Template not found in create_lxc.sh" 
+      ;;
+    208) 
+      echo -e "${TAB}Error: Error downloading template in create_lxc.sh"
+      echo -e "${TAB}Suggestion: Check internet connectivity and template repository"
+      post_update_to_api "failed" "208: Error downloading template in create_lxc.sh" 
+      ;;
+    209) 
+      echo -e "${TAB}Error: Container creation failed, but template is intact in create_lxc.sh"
+      echo -e "${TAB}Suggestion: This is likely a configuration issue - check network, storage, or MTU settings"
+      post_update_to_api "failed" "209: Container creation failed, but template is intact in create_lxc.sh" 
+      ;;
+    *) 
+      echo -e "${TAB}Error: Unknown error in create_lxc.sh (exit code: $exit_code)"
+      post_update_to_api "failed" "Unknown error, exit code: $exit_code in create_lxc.sh" 
+      ;;
     esac
+    echo ""
   fi
 }
 
