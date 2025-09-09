@@ -335,8 +335,10 @@ flock -w 60 9 || {
   exit 211
 }
 
+set +e  # Temporarily disable exit on error
 PCT_CREATE_OUTPUT=$(pct create "$CTID" "${TEMPLATE_STORAGE}:vztmpl/${TEMPLATE}" "${PCT_OPTIONS[@]}" 2>&1)
 PCT_CREATE_EXIT_CODE=$?
+set -e  # Re-enable exit on error
 
 if [ $PCT_CREATE_EXIT_CODE -ne 0 ]; then
   msg_error "Container creation failed (exit code: $PCT_CREATE_EXIT_CODE)"
@@ -401,8 +403,10 @@ if [ $PCT_CREATE_EXIT_CODE -ne 0 ]; then
   msg_ok "Re-downloaded LXC Template"
 
   # Retry container creation with detailed error reporting
+  set +e  # Temporarily disable exit on error
   PCT_RETRY_OUTPUT=$(pct create "$CTID" "${TEMPLATE_STORAGE}:vztmpl/${TEMPLATE}" "${PCT_OPTIONS[@]}" 2>&1)
   PCT_RETRY_EXIT_CODE=$?
+  set -e  # Re-enable exit on error
 
   if [ $PCT_RETRY_EXIT_CODE -ne 0 ]; then
     msg_error "Container creation failed again after template re-download (exit code: $PCT_RETRY_EXIT_CODE)"
